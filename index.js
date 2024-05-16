@@ -5,11 +5,11 @@ import { registerValidation,loginValidation, postCreateValidation} from './valid
 import {checkAuth,handleValidationErrors} from './utils/index.js'
 import multer from 'multer';
 import { UserController, PostController } from './controllers/index.js';
+import 'dotenv/config'
 
-mongoose.connect('mongodb+srv://volodiatsviakh:ev25l3MKiIXV8iPN@claster0.6mpexze.mongodb.net/blog?retryWrites=true&w=majority&appName=Claster0')
+mongoose.connect(process.env.MONGODB_URI)
 .then(()=>console.log("DB ok"))
 .catch((err)=>console.log("DB error", err))
-
 const app = express();
 const storage = multer.diskStorage({
     destination:(_,__,cb)=>{
@@ -44,7 +44,7 @@ app.get('/posts/:id',PostController.getOne)
 app.post('/posts',checkAuth,postCreateValidation,handleValidationErrors, PostController.create)
 app.delete('/posts/:id',checkAuth, PostController.remove)
 app.patch('/posts/:id',checkAuth, postCreateValidation,handleValidationErrors, PostController.update)
-app.listen(4444,(err)=>{
+app.listen(process.env.PORT,(err)=>{
     if(err){
         return console.log(err)
     }
